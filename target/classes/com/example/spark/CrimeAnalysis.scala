@@ -1,59 +1,46 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-
-object CrimeAnalysis {
+import org.apache.spark.sql.types.IntegerType
+object CrimeDataPreprocessing {
   def main(args: Array[String]): Unit = {
-    // Create Spark Session
     val spark = SparkSession.builder
-      .appName("Chicago Crime Data Analysis")
+      .appName("CrimeDataPreprocessing")
       .master("local[*]")
-      .config("spark.sql.legacy.timeParserPolicy", "LEGACY")
       .getOrCreate()
 
-    // Load the data
-    val crimeData = spark.read
+    val rawDF = spark.read
       .option("header", "true")
       .option("inferSchema", "true")
       .csv("src/resources/Chicago_Crimes.csv")
 
-    // Print schema and preview data
-    crimeData.printSchema()
-    crimeData.show(10)
-    val cleanedData = crimeData
+    val cleanedDF = rawDF
       .withColumnRenamed("x", "Longitude")
       .withColumnRenamed("y", "Latitude")
-      .withColumn("Date", to_timestamp(col("Date"), "yyyy-MM-dd HH:mm:ss"))
-      .withColumn("Month", month(col("Date"))) // Extract month
-      .withColumn("Updated_On", to_date(col("Updated On"), "MM/dd/yyyy HH:mm:ss"))
-      .filter(col("Longitude").isNotNull && col("Latitude").isNotNull)
-      .cache()
+      .withColumn("Date", to_timestamp(col("Date"), "MM/dd/yyyy HH:mm:ss"))
+      .filter(col("Longitude").isNotNull && col("Latitude").isNotNull && col("Primary Type").isNotNull)
 
-    cleanedData.show(10)
-
-
-   val validData = cleanedData.filter(col("Year").isNotNull && col("Year").between(1900, 2100))
-
-   // Debug: Check unique values in the Year column
-   validData.select("Year").distinct().orderBy("Year").show(50)
-
-   // Compute yearly trends
-   val yearlyTrends = validData.groupBy("Year")
-     .count()
-     .orderBy("Year")
-
-   yearlyTrends.show(50)
+    // Example: Select only the columns we need for the API
+    val simplifiedDF = cleanedDF.select(
+      col("ID"),
+      col("Primary Type").as("primary_type"),
+      col("Latitude"),
+      col("Longitude"),
+      col("Year")
+    )
+    val correctedDF = simplifiedDF
+      .withColumn("Year", col("Year").cast(IntegerType))
+    val lastDF = correctedDF.filter(col("Year").isNotNull)
 
 
-    // Group by Month to calculate crime counts
-    // val seasonalTrend = cleanedData.groupBy("Month")
-    //   .count()
-    //   .orderBy("Month")
+//    simplifiedDF.write.parquet("output/crimes_cleaned.parquet")
+    val jdbcUrl = "jdbc:postgresql://localhost:5432/crimes"
+    val jdbcProperties = new java.util.Properties()
+    jdbcProperties.setProperty("user", "postgres")
+    jdbcProperties.setProperty("password", "password")
 
-    // // Show results
-    // seasonalTrend.show(12)
+    lastDF.write
+      .mode("append")
+      .jdbc(jdbcUrl, "crime", jdbcProperties)
     spark.stop()
   }
-
-
 }
-
