@@ -1,0 +1,110 @@
+/* Overall Layout */
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  box-sizing: border-box;
+  background-color: #121212; /* Dark background */
+  color: #ffffff; /* Light text color */
+  overflow: hidden; /* Prevents extra scrolling */
+}
+
+/* Improved Navbar */
+.top-navbar {
+  background-color: #1f1f1f;
+  padding: 1rem 2rem;
+  color: white;
+  display: flex;
+  justify-content: space-between; /* Space between logo and menu */
+  align-items: center; /* Vertically center items */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  border-bottom: 2px solid #1db954; /* Add an accent line */
+}
+
+.top-navbar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1db954; /* Highlight logo */
+}
+
+.top-navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  padding: 0;
+  margin: 0;
+}
+
+.top-navbar li {
+  cursor: pointer;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.top-navbar li:hover {
+  color: #1db954; /* Highlight on hover */
+  border-bottom: 2px solid #1db954; /* Underline on hover */
+}
+
+/* Main Content */
+.main-container {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+/* Left Panel: Analysis Options */
+.left-panel {
+  width: 25%;
+  background-color: #1f1f1f;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  height: 100%; /* Ensures it matches the parent's height */
+  overflow-y: auto;
+}
+
+/* Map Section */
+.map-container {
+  flex: 1;
+  background: #1f1f1f;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensures it matches the parent's height */
+  overflow: hidden;
+}
+
+.map-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.map-content {
+  flex: 1;
+  overflow: hidden; /* Prevents unnecessary scrolling inside the map container */
+  border-radius: 8px;
+  background-color: #2b2b2b;
+  padding-bottom: 1rem; /* Add bottom padding for spacing */
+}
+
+/* Crime Filter Dropdown */
+.crime-filter select {
+  background-color: #333333;
+  color: #ffffff;
+  border: 1px solid #444444;
+  border-radius: 4px;
+  padding: 0.5rem;
+  outline: none;
+}
+
+.crime-filter select:focus {
+  border-color: #1db954;
+}

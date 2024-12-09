@@ -15,20 +15,43 @@ const pool = new Pool({
   port: 5432                // default PostgreSQL port
 });
 
-// GET /api/crimes endpoint
-// Optional query parameter: ?type=THEFT
+// GET /api/crime endpoint
+// Optional query parameters:
+// ?type=THEFT&yearFrom=2015&yearTo=2018&limit=200
 app.get('/api/crime', async (req, res) => {
   const crimeType = req.query.type;
+  const yearFrom = req.query.yearFrom;
+  const yearTo = req.query.yearTo;
   const limit = req.query.limit ? parseInt(req.query.limit, 10) : 100; // default to 100 if no limit specified
+
   let query = 'SELECT id, primary_type, latitude, longitude, year FROM crime';
   const params = [];
+  const conditions = [];
 
   if (crimeType) {
-    query += ' WHERE primary_type = $1';
-    params.push(crimeType.toUpperCase()); // convert to uppercase if your data is uppercase
+    conditions.push(`primary_type = $${conditions.length + 1}`);
+    params.push(crimeType.toUpperCase());
   }
 
-  // You can add a LIMIT if desired, e.g., `query += ' LIMIT 1000';`
+  // If yearFrom and yearTo are provided, filter between them
+  if (yearFrom && yearTo) {
+    conditions.push(`year >= $${conditions.length + 1} AND year <= $${conditions.length + 2}`);
+    params.push(parseInt(yearFrom, 10));
+    params.push(parseInt(yearTo, 10));
+  } else if (yearFrom) {
+    // Only a from year provided
+    conditions.push(`year >= $${conditions.length + 1}`);
+    params.push(parseInt(yearFrom, 10));
+  } else if (yearTo) {
+    // Only a to year provided
+    conditions.push(`year <= $${conditions.length + 1}`);
+    params.push(parseInt(yearTo, 10));
+  }
+
+  if (conditions.length > 0) {
+    query += ' WHERE ' + conditions.join(' AND ');
+  }
+
   query += ` LIMIT $${params.length + 1}`;
   params.push(limit);
 
@@ -44,5 +67,5 @@ app.get('/api/crime', async (req, res) => {
 // Start the server
 const PORT = 4000;
 app.listen(PORT, () => {
-  console.log(`API server running at http://localhost:${PORT}/api/crimes`);
+  console.log(`API server running at http://localhost:${PORT}/api/crime`);
 });
