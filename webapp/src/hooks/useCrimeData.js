@@ -1,9 +1,8 @@
-// src/hooks/useCrimesData.js
 import { useState, useEffect } from 'react';
 
 const API_BASE_URL = "http://localhost:4000"; // Adjust if needed
 
-function useCrimesData(crimeType, limit, yearFrom, yearTo) {
+function useCrimesData(crimeType, limit, yearFrom, yearTo, neighborhood) {
   const [crimes, setCrimes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,13 +23,17 @@ function useCrimesData(crimeType, limit, yearFrom, yearTo) {
         url += `&yearTo=${yearTo}`;
       }
 
+      if (neighborhood && neighborhood !== '') {
+        url += `&neighborhood=${encodeURIComponent(neighborhood)}`;
+      }
+
       const response = await fetch(url);
       const data = await response.json();
       setCrimes(data);
       setLoading(false);
     };
     fetchCrimes();
-  }, [crimeType, limit, yearFrom, yearTo]);
+  }, [crimeType, limit, yearFrom, yearTo, neighborhood]);
 
   return { crimes, loading };
 }

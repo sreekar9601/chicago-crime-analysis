@@ -1,17 +1,23 @@
-// src/components/CrimeFilter.js
 import React from 'react';
 
-function CrimeFilter({ crimeType, setCrimeType, limit, setLimit, yearFrom, setYearFrom, yearTo, setYearTo }) {
+function CrimeFilter({ 
+  crimeType, setCrimeType, 
+  limit, setLimit, 
+  yearFrom, setYearFrom, 
+  yearTo, setYearTo, 
+  neighborhood, setNeighborhood,
+  neighborhoods,
+  crimeTypes
+}) {
   return (
     <div style={{ marginBottom: '1rem' }}>
       <label>
         Crime Type:{' '}
         <select value={crimeType} onChange={(e) => setCrimeType(e.target.value)}>
           <option value="">All</option>
-          <option value="THEFT">THEFT</option>
-          <option value="BATTERY">BATTERY</option>
-          <option value="NARCOTICS">NARCOTICS</option>
-          {/* Add more options as needed */}
+          {crimeTypes.map((ct) => (
+            <option key={ct} value={ct}>{ct}</option>
+          ))}
         </select>
       </label>
 
@@ -45,6 +51,16 @@ function CrimeFilter({ crimeType, setCrimeType, limit, setLimit, yearFrom, setYe
           onChange={(e) => setLimit(e.target.value)}
           style={{ width: '60px' }}
         />
+      </label>
+
+      <label style={{ marginLeft: '1rem' }}>
+        Neighborhood:{' '}
+        <select value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)}>
+          <option value="">All</option>
+          {neighborhoods.map((n) => (
+            <option key={n} value={n}>{n}</option>
+          ))}
+        </select>
       </label>
     </div>
   );

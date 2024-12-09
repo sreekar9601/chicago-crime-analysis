@@ -2,11 +2,9 @@ const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 
-// Create an Express application
 const app = express();
 app.use(cors());
 
-// Set up your PostgreSQL connection pool
 const pool = new Pool({
   user: 'postgres',         // replace with your DB username
   host: 'localhost',        // replace if your DB is remote
@@ -15,36 +13,37 @@ const pool = new Pool({
   port: 5432                // default PostgreSQL port
 });
 
-// GET /api/crime endpoint
-// Optional query parameters:
-// ?type=THEFT&yearFrom=2015&yearTo=2018&limit=200
 app.get('/api/crime', async (req, res) => {
   const crimeType = req.query.type;
   const yearFrom = req.query.yearFrom;
   const yearTo = req.query.yearTo;
-  const limit = req.query.limit ? parseInt(req.query.limit, 10) : 100; // default to 100 if no limit specified
+  const neighborhood = req.query.neighborhood;
+  const limit = req.query.limit ? parseInt(req.query.limit, 10) : 100; 
 
-  let query = 'SELECT id, primary_type, latitude, longitude, year FROM crime';
+  let query = 'SELECT c.id, c.primary_type, c.latitude, c.longitude, c.year FROM crime c';
   const params = [];
   const conditions = [];
 
+  if (neighborhood) {
+    query += ' JOIN neighborhoods n ON ST_Within(c.geom, n.geom)';
+    conditions.push(`n.pri_neigh = $${conditions.length + 1}`);
+    params.push(neighborhood);
+  }
+
   if (crimeType) {
-    conditions.push(`primary_type = $${conditions.length + 1}`);
+    conditions.push(`c.primary_type = $${conditions.length + 1}`);
     params.push(crimeType.toUpperCase());
   }
 
-  // If yearFrom and yearTo are provided, filter between them
   if (yearFrom && yearTo) {
-    conditions.push(`year >= $${conditions.length + 1} AND year <= $${conditions.length + 2}`);
+    conditions.push(`c.year >= $${conditions.length + 1} AND c.year <= $${conditions.length + 2}`);
     params.push(parseInt(yearFrom, 10));
     params.push(parseInt(yearTo, 10));
   } else if (yearFrom) {
-    // Only a from year provided
-    conditions.push(`year >= $${conditions.length + 1}`);
+    conditions.push(`c.year >= $${conditions.length + 1}`);
     params.push(parseInt(yearFrom, 10));
   } else if (yearTo) {
-    // Only a to year provided
-    conditions.push(`year <= $${conditions.length + 1}`);
+    conditions.push(`c.year <= $${conditions.length + 1}`);
     params.push(parseInt(yearTo, 10));
   }
 
@@ -64,7 +63,28 @@ app.get('/api/crime', async (req, res) => {
   }
 });
 
-// Start the server
+app.get('/api/neighborhoods', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT DISTINCT pri_neigh FROM neighborhoods ORDER BY pri_neigh;');
+    const neighborhoods = result.rows.map(r => r.pri_neigh);
+    res.json(neighborhoods);
+  } catch (error) {
+    console.error('Error fetching neighborhoods:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/crimeTypes', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT DISTINCT primary_type FROM crime ORDER BY primary_type;');
+    const crimeTypes = result.rows.map(r => r.primary_type);
+    res.json(crimeTypes);
+  } catch (error) {
+    console.error('Error fetching crime types:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`API server running at http://localhost:${PORT}/api/crime`);
