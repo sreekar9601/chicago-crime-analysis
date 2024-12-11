@@ -42,6 +42,16 @@ latitude: DOUBLE PRECISION
 longitude: DOUBLE PRECISION
 year: INT
 
+In addition to the `crime` database, another database table needs to be created in PostgreSQL for storing neighborhood-related data. Use the following schema:
+
+- **Table Name**: `neighborhoods`
+- **Columns**:
+  - `id`: INTEGER (Primary Key)
+  - `pri_neigh`: VARCHAR(255) - Primary neighborhood name
+  - `sec_neigh`: VARCHAR(255) - Secondary neighborhood name
+  - `shape_area`: DOUBLE PRECISION - Area of the neighborhood
+  - `shape_len`: DOUBLE PRECISION - Perimeter length of the neighborhood
+  - `geom`: GEOMETRY - Geometric data for spatial analysis
 
 
 
