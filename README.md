@@ -77,4 +77,73 @@ In addition to the `crime` database, another database table needs to be created 
 
 
 
+---
+
+## Group Information
+
+**Group Name**: Interactive Crime Analytics Dashboard Team  
+**Group Number**: 7  
+
+### Members:
+1. **Huy Tran**  
+   - Computer Science and Engineering, University of California, Riverside  
+   - Student ID: 862465460  
+   - Email: qtran050@ucr.edu  
+
+2. **Vidit Naik**  
+   - Computer Science and Engineering, University of California, Riverside  
+   - Student ID: 862466760  
+   - Email: vnaik007@ucr.edu  
+
+3. **Sai Sreekar Sarvepalli**  
+   - Computer Science and Engineering, University of California, Riverside  
+   - Student ID: 862466297  
+   - Email: ssarv003@ucr.edu  
+
+4. **Vatsal Abhani**  
+   - Computer Science and Engineering, University of California, Riverside  
+   - Student ID: 862468321  
+   - Email: vabha001@ucr.edu  
+
+5. **Sruthi Suresh**  
+   - Computer Science and Engineering, University of California, Riverside  
+   - Student ID: 862465895  
+   - Email: ssure040@ucr.edu  
+
+---
+
+## Author Contributions
+
+### General Contributions
+All team members actively participated in brainstorming, discussions, and decision-making throughout the project. Here is a summary of major contributions for specific milestones:
+
+1. **Data Collection and Exploration**  
+   - All team members explored public crime datasets, selecting the UCR STAR Chicago Crimes dataset and Chicago Data Portal - Boundaries - Neighborhoods dataset.  
+   - **Sai Sreekar Sarvepalli**: Led data preparation for ingestion into PostgreSQL and ensured compatibility with Apache Spark.
+
+2. **Literature Survey**  
+   - Reviewed research papers and investigated tools.  
+   - **Sruthi Suresh**: Organized and formatted the final literature survey document.
+
+3. **Database Setup and Backend Development**  
+   - **Vidit Naik**: Configured PostgreSQL with PostGIS for spatial data storage and querying.  
+   - **Vatsal Abhani**: Set up the Node.js backend, built APIs, and ensured seamless integration between SparkSQL and PostgreSQL.
+
+4. **Data Cleaning and Preprocessing**  
+   - **Huy Tran**: Led data cleaning using Apache Spark, removing duplicates, handling missing values, and structuring data.
+
+5. **Geospatial Visualization and Analysis**  
+   - **Sai Sreekar Sarvepalli**: Integrated Leaflet.js with React for geospatial visualizations, such as crime hotspot maps.  
+   - **Huy Tran**: Set up spatial queries in PostgreSQL using PostGIS for real-time data filtering.
+
+6. **Frontend Development**  
+   - **Vidit Naik**: Led React.js frontend development for an intuitive user interface.  
+   - **Sruthi Suresh**: Designed custom CSS for styling and integrated interactive components using React.js and Leaflet.js.  
+   - All members contributed to designing and testing UI components, including filters, maps, and panels.
+
+7. **Documentation and Report**  
+   - **Vatsal Abhani**: Led report formatting, ensuring adherence to guidelines and the inclusion of diagrams and results.  
+   - All members summarized their work and insights for the final documentation.
+
+---
 
