@@ -53,6 +53,17 @@ In addition to the `crime` database, another database table needs to be created 
   - `shape_len`: DOUBLE PRECISION - Perimeter length of the neighborhood
   - `geom`: GEOMETRY - Geometric data for spatial analysis
 
+### Database Population
+To populate the databases with the required data:
+
+1. **Fill the `crime` database**:  
+   Run the following Scala file:  
+   `chicago-crime-analysis\src\main\scala\com\example\spark\CrimeAnalysis.scala`
+
+2. **Fill the `neighborhoods` table**:  
+   Run the following Scala file:  
+   `src\main\scala\com\example\spark\NeighborhoodsToPostgres.scala`
+
 
 
 ### Step 2: Backend Setup
